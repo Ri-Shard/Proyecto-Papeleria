@@ -5,25 +5,25 @@ import 'package:get/get.dart';
 import '../model/product_model.dart';
 
 class ProductController extends GetxController {
-  RxList<Producto> products = RxList<Producto>([]);
+  RxList<ProductoModel> products = RxList<ProductoModel>([]);
 
-  guardarProducto(Producto producto) {
+  guardarProducto(ProductoModel producto) {
     FirebaseFirestore.instance
-        .collection("Producto")
+        .collection("Papeleria")
         .doc("productos")
         .set({producto.id: producto.toJSONEncodable()}, SetOptions(merge: true));
   }
 
-  Stream<List<Producto>> mostrarProducto() {
+  Stream<List<ProductoModel>> mostrarProducto() {
     return FirebaseFirestore.instance
-        .collection("Producto")
+        .collection("Papeleria")
         .doc("productos")
         .get()
         .asStream()
         .map((event) {
-      List<Producto> productAux = [];
+      List<ProductoModel> productAux = [];
       for (var item in event.data()!.values) {
-        productAux.add(Producto(
+        productAux.add(ProductoModel(
             name: item["name"],
             id: item["id"],
             category: item["category"],
@@ -35,13 +35,13 @@ class ProductController extends GetxController {
       return productAux;
     });
   }
-  List<Producto> checkProduct() {
+  List<ProductoModel> checkProduct() {
     products.bindStream(mostrarProducto());
     return products;
   }
 
-  List<Producto> productoporCategoria(String categoria){
-    List<Producto> categorias =[];
+  List<ProductoModel> productoporCategoria(String categoria){
+    List<ProductoModel> categorias =[];
     checkProduct().forEach((pro) {if (pro.category == categoria){categorias.add(pro);} });
     return categorias;
   }

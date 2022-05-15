@@ -1,5 +1,5 @@
 
-class Producto {
+class ProductoModel {
   final String name;
   final String id;
   final String category;
@@ -7,7 +7,7 @@ class Producto {
   final String quantity;
   final String price;
 
-  Producto({required this.name, required this.id, required this.category, required this.quantity,required this.image,required this.price});  
+  ProductoModel({required this.name, required this.id, required this.category, required this.quantity,required this.image,required this.price});  
 
     toJSONEncodable() {
     Map<String, dynamic> m =  {};

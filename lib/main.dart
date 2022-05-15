@@ -8,7 +8,7 @@ import 'package:proyecto_papeleria/ui/views/Admin/admin_homepage.dart';
 import 'package:proyecto_papeleria/ui/views/Admin/product/add_product.dart';
 import 'package:proyecto_papeleria/ui/views/Admin/product/list_product.dart';
 
-import 'controller/product_controlle.dart';
+import 'controller/product_controller.dart';
 
 
 Future<void> main() async {

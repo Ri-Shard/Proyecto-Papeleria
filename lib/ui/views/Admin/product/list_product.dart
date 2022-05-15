@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:proyecto_papeleria/controller/product_controlle.dart';
+import 'package:proyecto_papeleria/controller/product_controller.dart';
 import 'package:proyecto_papeleria/model/product_model.dart';
 
 class ProductListPage extends StatefulWidget {
@@ -20,7 +20,7 @@ ProductController productController = ProductController();
     );
   }
   Widget _body(BuildContext context, ProductController controller) {
-  return StreamBuilder<List<Producto>>(
+  return StreamBuilder<List<ProductoModel>>(
       stream: controller.mostrarProducto(),
       builder: (context, snapshot) {
         return snapshot.data == null

@@ -2,10 +2,11 @@ import 'dart:io';
 
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:proyecto_papeleria/controller/product_controlle.dart';
+import 'package:proyecto_papeleria/controller/product_controller.dart';
 import 'package:proyecto_papeleria/model/product_model.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -17,7 +18,7 @@ class AddProductsPage extends StatefulWidget {
 }
 
 class _AddProductsPageState extends State<AddProductsPage> {
-    FirebaseStorage storage = FirebaseStorage.instance;
+  FirebaseStorage storage = FirebaseStorage.instance;
   final ImagePicker _picker = ImagePicker();
   ProductController productController = ProductController();
   final _formKey = GlobalKey<FormState>();
@@ -155,9 +156,10 @@ class _AddProductsPageState extends State<AddProductsPage> {
                             'uploaded_by': 'Admin',
                             'description': 'Some description...'
                           }));
-                       String url = await storage.ref(_imageController).getDownloadURL();
+                      String url =
+                          await storage.ref(_imageController).getDownloadURL();
 
-                      final producto = Producto(
+                      final producto = ProductoModel(
                           id: _idController.text,
                           name: _nameController.text,
                           quantity: _quantityController.text,
@@ -303,6 +305,9 @@ class _AddProductsPageState extends State<AddProductsPage> {
             },
             autovalidateMode: AutovalidateMode.onUserInteraction,
             keyboardType: TextInputType.number,
+            inputFormatters: <TextInputFormatter>[
+              FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+            ],
             obscureText: false,
             decoration: const InputDecoration(
               contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),

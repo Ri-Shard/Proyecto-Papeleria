@@ -4,7 +4,7 @@ import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:proyecto_papeleria/controller/product_controlle.dart';
+import 'package:proyecto_papeleria/controller/product_controller.dart';
 import 'package:proyecto_papeleria/ui/widgets/cardproduct_widget.dart';
 import 'package:proyecto_papeleria/ui/widgets/searchBox_widget.dart';
 

@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import '../../model/product_model.dart';
 
 class CardProduct extends StatefulWidget {
-  final Producto product;
+  final ProductoModel product;
   final Color colorAccent;
 
   const CardProduct({Key? key,required this.product, this.colorAccent = Colors.deepPurple}) : super(key: key);

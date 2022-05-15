@@ -42,6 +42,18 @@ class AdminDashBoard extends StatelessWidget {
                 "https://firebasestorage.googleapis.com/v0/b/proyectopapeleria-aacff.appspot.com/o/prueba.png?alt=media&token=f61a96c4-c1f4-4b1c-8198-36cc583ff76f",
                 "Listado De Productos","/productlist"),
           ),
+          Padding(
+            padding: const EdgeInsets.all(50.0),
+            child: _card(
+                "https://firebasestorage.googleapis.com/v0/b/proyectopapeleria-aacff.appspot.com/o/prueba.png?alt=media&token=f61a96c4-c1f4-4b1c-8198-36cc583ff76f",
+                "Nueva Venta","/productlist"),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(50.0),
+            child: _card(
+                "https://firebasestorage.googleapis.com/v0/b/proyectopapeleria-aacff.appspot.com/o/prueba.png?alt=media&token=f61a96c4-c1f4-4b1c-8198-36cc583ff76f",
+                "Registro Ventas","/productlist"),
+          ),
         ],
       );
 
