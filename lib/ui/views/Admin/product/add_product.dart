@@ -168,6 +168,8 @@ class _AddProductsPageState extends State<AddProductsPage> {
                           price: _priceController.text);
                       productController.guardarProducto(producto);
                       Get.back();
+                      Get.snackbar("Guardado con exito", "El producto fue guardado con Exito");
+                      Get.clearRouteTree();
                     }
                   },
                   color: Colors.cyan.shade300,
