@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
+// import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get/get.dart';
 import 'package:proyecto_papeleria/model/order_model.dart';
 
@@ -7,6 +7,7 @@ import '../model/product_model.dart';
 
 class OrderController extends GetxController {
   RxList<OrderModel> orders = RxList<OrderModel>([]);
+  RxList<OrderModel> preorders = RxList<OrderModel>([]);
 
   guardarOrden(OrderModel order) {
     FirebaseFirestore.instance

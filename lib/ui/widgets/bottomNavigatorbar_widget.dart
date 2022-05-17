@@ -1,4 +1,5 @@
-import 'package:proyecto_papeleria/services/navigator_services.dart';
+// ignore: file_names
+import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 
 
@@ -46,11 +47,11 @@ class _BottomNavigatorBarState extends State<BottomNavigatorBar> {
             setState(() {
               currentIndex = index;
               switch (currentIndex) {
-                case 0:navigationService.navigateTo('/adminhome');                  
+                case 0:Get.offAllNamed('/adminhome');                  
                   break;
-                case 1:navigationService.navigateTo('/');                  
+                case 1:Get.offAllNamed('/');                  
                   break;
-                case 2: navigationService.navigateTo('/userhome');                 
+                case 2: Get.offAllNamed('/userhome');                 
                   break;
                 default:
               }

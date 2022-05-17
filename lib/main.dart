@@ -7,7 +7,8 @@ import 'package:proyecto_papeleria/ui/views/Admin/admin_dashboard.dart';
 import 'package:proyecto_papeleria/ui/views/Admin/admin_homepage.dart';
 import 'package:proyecto_papeleria/ui/views/Admin/product/add_product.dart';
 import 'package:proyecto_papeleria/ui/views/Admin/product/list_product.dart';
-import 'package:proyecto_papeleria/ui/views/Admin/sale/add_sale.dart';
+// import 'package:proyecto_papeleria/ui/views/Admin/product/update_product.dart';
+// import 'package:proyecto_papeleria/ui/views/Admin/sales/add_sale.dart';
 
 import 'controller/product_controller.dart';
 
@@ -41,7 +42,7 @@ class MyApp extends StatelessWidget {
                     '/addproduct': (context) =>  const AddProductsPage(),
                     '/productlist': (context) =>  const ProductListPage(),
                     //Order
-                     '/addsale': (context) =>  const AddSalePage(),
+                    //  '/addsale': (context) =>   AddSalePage(),
                     // '/productlist': (context) =>  const ProductListPage(),
                   },
                   navigatorKey: navigationService.navigatorKey,      

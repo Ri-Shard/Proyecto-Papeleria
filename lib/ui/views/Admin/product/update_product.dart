@@ -10,23 +10,27 @@ import 'package:proyecto_papeleria/controller/product_controller.dart';
 import 'package:proyecto_papeleria/model/product_model.dart';
 import 'package:image_picker/image_picker.dart';
 
-class AddProductsPage extends StatefulWidget {
-  const AddProductsPage({Key? key}) : super(key: key);
+class UpdateProductsPage extends StatefulWidget {
+  final ProductoModel product;
+   // ignore: use_key_in_widget_constructors
+   const UpdateProductsPage({ required this.product});
 
   @override
-  _AddProductsPageState createState() => _AddProductsPageState();
+  _UpdateProductsPageState createState() => _UpdateProductsPageState();
 }
 
-class _AddProductsPageState extends State<AddProductsPage> {
+class _UpdateProductsPageState extends State<UpdateProductsPage> {
   FirebaseStorage storage = FirebaseStorage.instance;
   final ImagePicker _picker = ImagePicker();
   ProductController productController = ProductController();
   final _formKey = GlobalKey<FormState>();
+    String? _categoryController;
+  String _imageController = " ";
+  String _imageControllerAux = " ";
+  File? _imageFile;
+  bool select = false;
   final TextEditingController _idController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
-  String? _categoryController;
-  String _imageController = " ";
-  File? _imageFile;
   final TextEditingController _quantityController = TextEditingController();
   final TextEditingController _priceController = TextEditingController();
 
@@ -37,12 +41,7 @@ class _AddProductsPageState extends State<AddProductsPage> {
     MaxLengthValidator(20, errorText: 'Nombre muy largo, pruebe uno mas corto'),
     MinLengthValidator(2, errorText: 'Nombre del producto muy corto')
   ]);
-  final idValidator = MultiValidator([
-    RequiredValidator(errorText: 'La identificacion es Requerida'),
-    MaxLengthValidator(10,
-        errorText: 'identificacion muy larga, pruebe una mas corta'),
-    MinLengthValidator(4, errorText: 'Minimo 4 Digitos')
-  ]);
+
   final quantityValidator = MultiValidator([
     RequiredValidator(errorText: 'La cantidad es Requerida'),
     MaxLengthValidator(3, errorText: 'Cantidad Exhorbitante a agregar'),
@@ -57,6 +56,12 @@ class _AddProductsPageState extends State<AddProductsPage> {
   late double height, width;
   @override
   Widget build(BuildContext context) {
+    _idController.text = widget.product.id;
+    _nameController.text = widget.product.name;
+    _priceController.text = widget.product.price;
+    _quantityController.text = widget.product.quantity;
+    _categoryController = widget.product.category;
+    _imageController = widget.product.image;
     return LayoutBuilder(builder: (context, constraints) {
       height = constraints.maxHeight;
       width = constraints.maxWidth;
@@ -83,7 +88,7 @@ class _AddProductsPageState extends State<AddProductsPage> {
                   children: [
                     Column(
                       children: [
-                        Text("AGREGAR PRODUCTO",
+                        Text("ACTUALIZAR PRODUCTO",
                             style: GoogleFonts.poppins(
                                 decorationColor: Colors.black,
                                 decorationStyle: TextDecorationStyle.wavy,
@@ -125,7 +130,10 @@ class _AddProductsPageState extends State<AddProductsPage> {
                         height: 50,
                         onPressed: () async {
                           if (_formKey.currentState?.validate() == true) {
+                            select = true;
+                            _imageControllerAux = _imageController;
                             _getFromGallery();
+
                           } else {}
                         },
                         color: Colors.cyan,
@@ -154,12 +162,20 @@ class _AddProductsPageState extends State<AddProductsPage> {
                         height: 60,
                         onPressed: () async {
                           if (_formKey.currentState?.validate() == true &&
-                              _imageController != " ") {
-                            if (snapshot.data!.contains(_idController.text)) {
-                              Get.snackbar("Error",
-                                  "El Codigo de identificacion ya esta Registrado");
-                            } else {
-                              await storage.ref(_imageController).putFile(
+                              select == false) {
+                              final producto = ProductoModel(
+                                  id: _idController.text,
+                                  name: _nameController.text,
+                                  quantity: _quantityController.text,
+                                  category: _categoryController.toString(),
+                                  image: _imageController,
+                                  price: _priceController.text);
+                              productController.guardarProducto(producto);
+                              Get.snackbar("Actializado con exito",
+                                  "El producto fue Actualizado con Exito");                            
+                          } else if (select){
+                            await storage.refFromURL(_imageControllerAux).delete();
+                         await storage.ref(_imageController).putFile(
                                   _imageFile!,
                                   SettableMetadata(customMetadata: {
                                     'uploaded_by': 'Admin',
@@ -168,7 +184,6 @@ class _AddProductsPageState extends State<AddProductsPage> {
                               String url = await storage
                                   .ref(_imageController)
                                   .getDownloadURL();
-
                               final producto = ProductoModel(
                                   id: _idController.text,
                                   name: _nameController.text,
@@ -177,11 +192,8 @@ class _AddProductsPageState extends State<AddProductsPage> {
                                   image: url,
                                   price: _priceController.text);
                               productController.guardarProducto(producto);
-                              Get.snackbar("Guardado con exito",
-                                  "El producto fue guardado con Exito");
-                            }
-                          } else {
-                            Get.snackbar("Error", "Seleccione Una imagen");
+                              Get.snackbar("Actializado con exito",
+                                  "El producto fue Actualizado con Exito");  
                           }
                         },
                         color: Colors.cyan.shade300,
@@ -272,7 +284,7 @@ class _AddProductsPageState extends State<AddProductsPage> {
         ),
         TextFormField(
           controller: _idController,
-          validator: idValidator,
+          enabled: false,
           keyboardType: TextInputType.number,
           autovalidateMode: AutovalidateMode.onUserInteraction,
           obscureText: false,
