@@ -29,7 +29,7 @@ class _LoginPageState extends State<LoginPage> {
   body(){
           return Form(
       key: _formKey,
-      child: Container(
+      child: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child:  Column(
           mainAxisAlignment: MainAxisAlignment.center,
