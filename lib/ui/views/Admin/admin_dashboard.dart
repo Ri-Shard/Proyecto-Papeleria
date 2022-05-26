@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:proyecto_papeleria/controller/auth_controller.dart';
 import 'package:proyecto_papeleria/services/navigator_services.dart';
 
 class AdminDashBoard extends StatelessWidget {
@@ -7,8 +8,10 @@ class AdminDashBoard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    AuthController controller = AuthController();
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(onPressed: () {controller.signOut();}, icon: const Icon(Icons.do_disturb_on_rounded)),
         elevation: 0,
         title: Column(
           children: [
