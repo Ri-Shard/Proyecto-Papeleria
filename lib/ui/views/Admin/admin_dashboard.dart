@@ -57,25 +57,25 @@ class AdminDashBoard extends StatelessWidget {
       "name": "Agregar Producto",
       "route": "/addproduct",
       "url_image":
-          "https://firebasestorage.googleapis.com/v0/b/proyectopapeleria-aacff.appspot.com/o/anadir.png?alt=media&token=f8af3f7f-445a-4dc8-8472-b9079f4c8407",
+          "assets/images/anadir.png",
     },
     {
       "name": "Nueva Venta",
       "route": "/addsale",
       "url_image":
-          "https://firebasestorage.googleapis.com/v0/b/proyectopapeleria-aacff.appspot.com/o/ventas.png?alt=media&token=59d2d25d-5e9b-4f0c-b26f-09dc1ef8c434",
+          "assets/images/NuevaVentaImage.png",
     },
     {
       "name": "Listado De Productos",
       "route": "/productlist",
       "url_image":
-          "https://firebasestorage.googleapis.com/v0/b/proyectopapeleria-aacff.appspot.com/o/prueba.png?alt=media&token=f61a96c4-c1f4-4b1c-8198-36cc583ff76f",
+          "assets/images/ListadoProductosImage.png",
     },
     {
       "name": "Registro Ventas",
       "route": "/addproduct",
       "url_image":
-          "https://firebasestorage.googleapis.com/v0/b/proyectopapeleria-aacff.appspot.com/o/negocios-y-finanzas.png?alt=media&token=86660917-03cb-4a8b-83e1-b27c0c542a81",
+          "assets/images/ListadoVentasImage.png",
     },
   ];
   get gridv => GridView.count(
@@ -99,7 +99,7 @@ class AdminDashBoard extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Image(
-                image: NetworkImage(urel),
+                image: AssetImage(urel),
                 height: 150,
                 width: 115,
               ),

@@ -75,10 +75,7 @@ class _UpdateProductsPageState extends State<UpdateProductsPage> {
   Widget body() {
     return Form(
       key: _formKey,
-      child: FutureBuilder(
-          future: productController.checkProductID(),
-          builder: (context, AsyncSnapshot<List<String>> snapshot) {
-            return SingleChildScrollView(
+      child:  SingleChildScrollView(
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 40),
                 height: MediaQuery.of(context).size.height - 120,
@@ -210,8 +207,8 @@ class _UpdateProductsPageState extends State<UpdateProductsPage> {
                   ],
                 ),
               ),
-            );
-          }),
+            )
+
     );
   }
 

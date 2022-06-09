@@ -41,7 +41,7 @@ class _LoginPageState extends State<LoginPage> {
                   fontSize: 30.0,
                   fontWeight: FontWeight.bold,
                   color: Colors.black)),
-            Image.network('https://firebasestorage.googleapis.com/v0/b/proyectopapeleria-aacff.appspot.com/o/kisspng-paper-office-supplies-stationery-business-learning-tools-5aa23cf830d090.7861987015205818802-removebg-preview%20(1).png?alt=media&token=331e161b-2551-43d8-9990-4dbd5ea8724f'),
+            Image.asset("assets/images/CoverImage.png"),
             const SizedBox(height: 40,),
             TextFormField(
               controller: emailController,

@@ -34,7 +34,7 @@ class _AddProductsPageState extends State<AddProductsPage> {
 
   final nameValidator = MultiValidator([
     RequiredValidator(errorText: 'El Nombre es Requerido'),
-    MaxLengthValidator(20, errorText: 'Nombre muy largo, pruebe uno mas corto'),
+    MaxLengthValidator(50, errorText: 'Nombre muy largo, pruebe uno mas corto'),
     MinLengthValidator(2, errorText: 'Nombre del producto muy corto')
   ]);
   final idValidator = MultiValidator([
@@ -70,9 +70,9 @@ class _AddProductsPageState extends State<AddProductsPage> {
   Widget body() {
     return Form(
       key: _formKey,
-      child: FutureBuilder(
-          future: productController.checkProductID(),
-          builder: (context, AsyncSnapshot<List<String>> snapshot) {
+      child: StreamBuilder<List<ProductoModel>>(
+          stream: productController.mostrarProducto(),
+          builder: (context,snapshot) {
             return SingleChildScrollView(
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 40),
@@ -153,12 +153,19 @@ class _AddProductsPageState extends State<AddProductsPage> {
                         minWidth: double.infinity,
                         height: 60,
                         onPressed: () async {
+                          bool repeat =false;
                           if (_formKey.currentState?.validate() == true &&
                               _imageController != " ") {
-                            if (snapshot.data!.contains(_idController.text)) {
+                                for (var i = 0; i < snapshot.data!.length ; i++) {
+                                  if(snapshot.data![i].id == _idController.text){
+                                    repeat = true;
+                                  }                                
+                                }
+                              if (repeat) {
                               Get.snackbar("Error",
                                   "El Codigo de identificacion ya esta Registrado");
-                            } else {
+                            }
+                           else {
                               await storage.ref(_imageController).putFile(
                                   _imageFile!,
                                   SettableMetadata(customMetadata: {

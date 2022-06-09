@@ -38,21 +38,23 @@ class AdminHomepageState extends State<AdminHomepage> {
     colorText = Colors.black;
     colorIcon = Colors.black;
     colorIconText = Colors.grey.shade100;
-    return  CustomScrollView(
-          slivers: [
-            sliverAppBar(context: context),
-            SliverToBoxAdapter(
-                child: FadeInLeft(
-                    child: _buildTitleBubble(),
-                    delay: const Duration(milliseconds: 500))),
-            SliverToBoxAdapter(
-                child: FadeInLeft(
-                    child: const SearchBox(),
-                    delay: const Duration(milliseconds: 1000))),
-           _gridViewProducts(context: context),
-           _sliverContentInfo()
-          ],
-        );
+    return  Scaffold(
+      body: CustomScrollView(
+            slivers: [
+              sliverAppBar(context: context),
+              SliverToBoxAdapter(
+                  child: FadeInLeft(
+                      child: _buildTitleBubble(),
+                      delay: const Duration(milliseconds: 500))),
+              SliverToBoxAdapter(
+                  child: FadeInLeft(
+                      child: const SearchBox(),
+                      delay: const Duration(milliseconds: 1000))),
+             _gridViewProducts(context: context),
+             _sliverContentInfo()
+            ],
+          ),
+    );
   }
 
   SliverAppBar sliverAppBar({required BuildContext context}) {

@@ -68,13 +68,6 @@ _deleteImage(String image) async {
     return products;
   }
 
-  Future<List<String>> checkProductID()async{
-        List<String> listIDAux =[];
-    products.bindStream(mostrarProducto());
-    for (var element in products) {listIDAux.add(element.id); }
-    listID = listIDAux;
-    return listID;
-  }
   List<ProductoModel> productoporCategoria(String categoria) {
     List<ProductoModel> categorias = [];
     checkProduct().forEach((pro) {
