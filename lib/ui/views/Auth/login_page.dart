@@ -23,9 +23,26 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: body(),
+      body: Stack(
+        children:[       Column(
+        children: [
+          Expanded(
+            child: Container(color: Colors.transparent),
+            flex: 5,
+          ),
+          Expanded(
+            child: Image.asset("assets/images/bottomLogin.png",fit: BoxFit.fill,),
+            flex: 2,
+          ),
+        ],
+      ),
+      body(),]
+      ),
+      
+
     );
   }
+
   body(){
           return Form(
       key: _formKey,
@@ -34,6 +51,7 @@ class _LoginPageState extends State<LoginPage> {
         child:  Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+                  const SizedBox(height: 60,),
                     Text("Iniciar Sesion",
               style: GoogleFonts.poppins(
                 decorationColor:Colors.black,

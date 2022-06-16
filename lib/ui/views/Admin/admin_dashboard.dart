@@ -26,7 +26,7 @@ class AdminDashBoard extends StatelessWidget {
                 style: GoogleFonts.actor(
                     decorationColor: Colors.black,
                     decorationStyle: TextDecorationStyle.wavy,
-                    fontSize: 20.0,
+                    fontSize: 15.0,
                     fontWeight: FontWeight.bold,
                     color: Colors.grey.shade100))
           ],
