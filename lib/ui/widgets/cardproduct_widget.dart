@@ -2,14 +2,22 @@ import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:form_field_validator/form_field_validator.dart';
+import 'package:proyecto_papeleria/controller/order_controller.dart';
 
 import '../../model/product_model.dart';
 
 class CardProduct extends StatefulWidget {
   final ProductoModel product;
   final Color colorAccent;
-
-  const CardProduct({Key? key,required this.product, this.colorAccent = Colors.deepPurple}) : super(key: key);
+  final OrderController controller;
+  const CardProduct(
+      {Key? key,
+      required this.product,
+      this.colorAccent = Colors.deepPurple,
+      required this.controller})
+      : super(key: key);
 
   @override
   _CardProductState createState() => _CardProductState();
@@ -47,68 +55,175 @@ class _CardProductState extends State<CardProduct>
     super.dispose();
     _controller.dispose();
   }
-
+  final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
+    TextEditingController cantidad = TextEditingController();
     _scale = 1 - _controller.value;
 
     return Transform.scale(
       scale: _scale,
-      child: Card(
-        elevation: 10.0,
-        clipBehavior: Clip.antiAlias,
-        color: colorFond.withOpacity(0.5),
-        margin: const EdgeInsets.all(12.0),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        child: GestureDetector(
-          onTapDown: _tapDown,
-          onTapUp: _tapUp,
-          onTap: () {},
-          child: Stack(
-            fit: StackFit.expand,
-            children: [
-              CachedNetworkImage(
-                imageUrl: widget.product.image,
-                fit: BoxFit.cover,
-                errorWidget: (context, url, error) =>
-                    const Center(child: Icon(Icons.error)),
-                placeholder: (context, url) => Container(
-                  color: Colors.grey,
-                ),
-              ),
-              Column(
-                children: [
-                  Row(
-                    children: [
-                      Expanded(child: Container()),
-                      Padding(
-                        padding: const EdgeInsets.all(12.0),
-                        child: Row(
-                          children: [
-                            Icon(Icons.star,
-                                size: 16,
-                                color: widget.colorAccent.withOpacity(0.7)),
-                            Text(widget.product.name,
-                                style: TextStyle(
-                                    color: widget.colorAccent.withOpacity(0.5),
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.bold)),
-                          ],
-                        ),
-                      ),
-                    ],
+      child: Form(
+        key: _formKey,
+        child: Card(
+          elevation: 10.0,
+          clipBehavior: Clip.antiAlias,
+          color: colorFond.withOpacity(0.5),
+          margin: const EdgeInsets.all(12.0),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          child: GestureDetector(
+            onTapDown: _tapDown,
+            onTapUp: _tapUp,
+            onTap: () {
+              bool repetido = false;
+              for (var item in widget.controller.preorders) {
+                if (item.id == widget.product.id) {
+                  repetido = true;
+                } else {
+                  repetido = false;
+                }
+              }
+              if (!repetido) {
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                          backgroundColor: Colors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          title: const Text("AGREGAR"),
+                          content: const Text("Producto Agregado Correctamente"),
+                          actions: [
+                            Row(
+                              children: [
+                                const Text(
+                                  "Cantidad",
+                                  style: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w400,
+                                      color: Colors.black87),
+                                ),
+                                const SizedBox(
+                                  height: 5,
+                                ),
+                                TextField(
+                                  controller: cantidad,
+                                  // validator: (value) {
+                                  //   if (value!.isEmpty) {
+                                  //     return 'La cantidad es Requerida';
+                                  //   } else if (int.parse(value) < 1) {
+                                  //     return 'Valor incorrecto';
+                                  //   } else if (int.parse(value) >
+                                  //       int.parse(widget.product.quantity)) {
+                                  //     return 'Precio Exhorbitante';
+                                  //   }
+                                  //   return null;
+                                  // },
+                                  // autovalidateMode:
+                                  //     AutovalidateMode.onUserInteraction,
+                                  keyboardType: TextInputType.number,
+                                  inputFormatters: <TextInputFormatter>[
+                                    FilteringTextInputFormatter.allow(
+                                        RegExp(r'[0-9]')),
+                                  ],
+                                  obscureText: false,
+                                  decoration: const InputDecoration(
+                                    contentPadding: EdgeInsets.symmetric(
+                                        vertical: 0, horizontal: 10),
+                                    enabledBorder: OutlineInputBorder(
+                                        borderSide:
+                                            BorderSide(color: Colors.grey)),
+                                    border: OutlineInputBorder(
+                                        borderSide:
+                                            BorderSide(color: Colors.grey)),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                final producto = ProductoModel(
+                                    id: widget.product.id,
+                                    name: widget.product.name,
+                                    quantity: cantidad.text,
+                                    category: widget.product.category,
+                                    image: widget.product.image,
+                                    price: widget.product.price);
+                               widget.controller.preorders.add(producto);
+                              },
+                              child: const Text('Ok'),
+                            ),
+                          ]);
+                    });
+              } else {
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                          backgroundColor: Colors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          title: const Text("ERROR"),
+                          content: const Text(
+                              "El producto ya se encuentra Agregado a la Preorden"),
+                          actions: [
+                            TextButton(
+                              onPressed: () {},
+                              child: const Text('Ok'),
+                            ),
+                          ]);
+                    });
+              }
+            },
+            child: Stack(
+              fit: StackFit.expand,
+              children: [
+                CachedNetworkImage(
+                  imageUrl: widget.product.image,
+                  fit: BoxFit.cover,
+                  errorWidget: (context, url, error) =>
+                      const Center(child: Icon(Icons.error)),
+                  placeholder: (context, url) => Container(
+                    color: Colors.grey,
                   ),
-                  Expanded(child: Container()),
-                  _buildContentInfo(obj: widget.product),
-                ],
-              ),
-            ],
+                ),
+                Column(
+                  children: [
+                    Row(
+                      children: [
+                        Expanded(child: Container()),
+                        Padding(
+                          padding: const EdgeInsets.all(12.0),
+                          child: Row(
+                            children: [
+                              Icon(Icons.star,
+                                  size: 16,
+                                  color: widget.colorAccent.withOpacity(0.7)),
+                              Text(widget.product.name,
+                                  style: TextStyle(
+                                      color: widget.colorAccent.withOpacity(0.5),
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.bold)),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    Expanded(child: Container()),
+                    _buildContentInfo(obj: widget.product),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),
     );
   }
-    Card _buildContentInfo({required var obj}) {
+
+  Card _buildContentInfo({required var obj}) {
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       clipBehavior: Clip.hardEdge,
@@ -146,4 +261,4 @@ class _CardProductState extends State<CardProduct>
       ),
     );
   }
-    }
+}

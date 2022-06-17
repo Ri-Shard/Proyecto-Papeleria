@@ -7,7 +7,7 @@ import '../model/product_model.dart';
 
 class OrderController extends GetxController {
   RxList<OrderModel> orders = RxList<OrderModel>([]);
-  RxList<OrderModel> preorders = RxList<OrderModel>([]);
+  RxList<ProductoModel> preorders = RxList<ProductoModel>([]);
 
   guardarOrden(OrderModel order) {
     FirebaseFirestore.instance
@@ -50,4 +50,6 @@ class OrderController extends GetxController {
     orders.bindStream(mostrarOrden());
     return orders;
   }
+
+
 }

@@ -41,7 +41,7 @@ class MyApp extends StatelessWidget {
                               
                   routes: {
                     //Admin
-                    '/adminhome': (context) => const AdminHomepage(),
+                   // '/adminhome': (context) => const AdminHomepage(),
                     '/admindash': (context) =>   AdminDashBoard(),
                     //Products
                     '/addproduct': (context) =>  const AddProductsPage(),

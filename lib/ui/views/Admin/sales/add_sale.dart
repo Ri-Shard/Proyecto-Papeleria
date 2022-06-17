@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:proyecto_papeleria/model/product_model.dart';
 import 'package:proyecto_papeleria/ui/widgets/cardproduct_widget.dart';
 
+import '../../../../controller/order_controller.dart';
 import '../../../../controller/product_controller.dart';
 
 class AddSalePage extends StatefulWidget {
@@ -15,6 +16,8 @@ class AddSalePage extends StatefulWidget {
 
 class _AddSalePageState extends State<AddSalePage> {
     ProductController productController = ProductController();
+    OrderController orderController = OrderController();
+
   late double height, width;
   @override
   void initState() {
@@ -47,7 +50,12 @@ class _AddSalePageState extends State<AddSalePage> {
       ),
       body: body(),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {},
+        onPressed: () {
+
+          showBottomSheet(context: context, builder: (BuildContext context){
+            return Container();
+          });
+        },
         icon: const Icon(Icons.shopify),
         label: const Text('Realizar venta'),
       ),
@@ -70,7 +78,7 @@ class _AddSalePageState extends State<AddSalePage> {
                 mainAxisSpacing: 20),
                 itemCount: snapshot.data!.length,
                  itemBuilder: (BuildContext context, int i) {
-                  return CardProduct(product: snapshot.data![i]);
+                  return CardProduct(product: snapshot.data![i],controller: orderController,);
                  } ,
               );
                }
