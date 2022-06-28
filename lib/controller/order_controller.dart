@@ -51,5 +51,13 @@ class OrderController extends GetxController {
     return orders;
   }
 
+  String totalOrden(){
+    int auxtotal =0;
+    for (var element in preorders) {
+      auxtotal = int.parse(element.price)*int.parse(element.quantity) + auxtotal;
+    }
+  return auxtotal.toString();
+  }
+
 
 }
