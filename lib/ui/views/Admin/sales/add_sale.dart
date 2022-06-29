@@ -21,6 +21,7 @@ class _AddSalePageState extends State<AddSalePage> {
   late double height, width;
   @override
   void initState() {
+    productController.checkProduct();
     super.initState();
   }
 
@@ -28,59 +29,63 @@ class _AddSalePageState extends State<AddSalePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Column(
-            children: [
-              Text("NUEVA VENTA",
-                  style: GoogleFonts.poppins(
-                      decorationColor: Colors.black,
-                      decorationStyle: TextDecorationStyle.wavy,
-                      fontSize: 30.0,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.grey.shade100)),
-              Text("Seleccione los productos",
-                  style: GoogleFonts.actor(
-                      decorationColor: Colors.black,
-                      decorationStyle: TextDecorationStyle.wavy,
-                      fontSize: 15.0,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.grey.shade100))
-            ],
-          ),
+      appBar: AppBar(
+        title: Column(
+          children: [
+            Text("NUEVA VENTA",
+                style: GoogleFonts.poppins(
+                    decorationColor: Colors.black,
+                    decorationStyle: TextDecorationStyle.wavy,
+                    fontSize: 30.0,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.grey.shade100)),
+            Text("Seleccione los productos",
+                style: GoogleFonts.actor(
+                    decorationColor: Colors.black,
+                    decorationStyle: TextDecorationStyle.wavy,
+                    fontSize: 15.0,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.grey.shade100))
+          ],
         ),
-        body: body(),
-        floatingActionButton: FloatingActionButton.extended(
-          onPressed: () {
-            if (orderController.preorders.isEmpty) {
-              showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      backgroundColor: Colors.white,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      title: const Text("ERROR"),
-                      content: const Text("Seleccione al menos 1 producto"),
-                    );
-                  });
-            } else {
-              showModalBottomSheet(
-                  context: context,
-                  builder: (context) =>
-                      Scaffold(body: Builder(builder: (context) {
-                        return ListView(
-                            children: <Widget>[createHeader(), createSubTitle(), createCartList(), footer(context)],
-                            );
-                      })));
-            }
-          },
-          icon: const Icon(Icons.shopify),
-          label: const Text('Realizar venta'),
-        ),
-                  floatingActionButtonLocation:
-              FloatingActionButtonLocation.centerFloat,
-        );
+      ),
+      body: body(),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          if (orderController.preorders.isEmpty) {
+            showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    backgroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    title: const Text("ERROR"),
+                    content: const Text("Seleccione al menos 1 producto"),
+                  );
+                });
+          } else {
+            showModalBottomSheet(
+                context: context,
+                builder: (context) =>
+                    Scaffold(body: Builder(builder: (context) {
+                      return ListView(
+                        children: <Widget>[
+                          createHeader(),
+                          createSubTitle(),
+                          createCartList(),
+                          footer(context)
+                        ],
+                      );
+                    })));
+          }
+        },
+        icon: const Icon(Icons.shopify),
+        label: const Text('Realizar venta'),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+    );
   }
 
   body() {
@@ -119,7 +124,7 @@ class _AddSalePageState extends State<AddSalePage> {
     );
   }
 
-    footer(BuildContext context) {
+  footer(BuildContext context) {
     return Container(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -137,9 +142,9 @@ class _AddSalePageState extends State<AddSalePage> {
               ),
               Container(
                 margin: const EdgeInsets.only(right: 30),
-                child:  Text(
+                child: Text(
                   "\$" " " + moneyFormat(orderController.totalOrden()),
-                  style: const  TextStyle(color: Colors.cyan, fontSize: 14),
+                  style: const TextStyle(color: Colors.cyan, fontSize: 14),
                 ),
               ),
             ],
@@ -147,13 +152,45 @@ class _AddSalePageState extends State<AddSalePage> {
           MaterialButton(
             onPressed: () {
               OrderModel order = OrderModel(
-                date: DateTime.now().toString(), dateid: DateTime.now().millisecond.toString(), products: orderController.preorders, price: orderController.totalOrden());
+                  date: DateTime.now().toString(),
+                  dateid: DateTime.now().millisecond.toString(),
+                  products: orderController.preorders,
+                  price: orderController.totalOrden());
 
-                orderController.guardarOrden(order);
+              int auxcantidad = 0;
+              for (var preorders in orderController.preorders) {
+                for (var productoID in productController.products) {
+                  if (preorders.id == productoID.id) {
+                    auxcantidad = int.parse(productoID.quantity) -
+                        int.parse(preorders.quantity);
+                  }
+                  if (auxcantidad == 0) {
+                    productController.eliminarProducto(preorders);
+                  } else {
+                    ProductoModel producto = ProductoModel(
+                        name: preorders.name,
+                        id: preorders.id,
+                        category: preorders.category,
+                        quantity: auxcantidad.toString(),
+                        image: preorders.image,
+                        price: preorders.price);
+                    productController.guardarProducto(producto);
+                  }
+                }
+              }
+
+              orderController.guardarOrden(order);
+              orderController.preorders.clear();
+              setState(() {
+                productController.mostrarProducto();
+              });
+              Navigator.pop(context);
             },
             color: Colors.cyan,
-            padding: const EdgeInsets.only(top: 12, left: 60, right: 60, bottom: 12),
-            shape: const RoundedRectangleBorder(borderRadius:  BorderRadius.all(Radius.circular(24))),
+            padding:
+                const EdgeInsets.only(top: 12, left: 60, right: 60, bottom: 12),
+            shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(24))),
             child: const Text(
               "Confirmar",
               style: TextStyle(color: Colors.white),
@@ -164,17 +201,19 @@ class _AddSalePageState extends State<AddSalePage> {
       margin: const EdgeInsets.only(top: 16),
     );
   }
-    createSubTitle() {
+
+  createSubTitle() {
     return Container(
       alignment: Alignment.topLeft,
-      child:  Text(
-        orderController.preorders.length.toString()+" Productos",
+      child: Text(
+        orderController.preorders.length.toString() + " Productos",
         style: const TextStyle(fontSize: 12, color: Colors.grey),
       ),
-      margin: const  EdgeInsets.only(left: 12, top: 4),
+      margin: const EdgeInsets.only(left: 12, top: 4),
     );
   }
-    createCartList() {
+
+  createCartList() {
     return ListView.builder(
       shrinkWrap: true,
       primary: false,
@@ -190,17 +229,23 @@ class _AddSalePageState extends State<AddSalePage> {
       children: <Widget>[
         Container(
           margin: const EdgeInsets.only(left: 16, right: 16, top: 16),
-          decoration: const BoxDecoration(color: Colors.white, borderRadius: BorderRadius.all( Radius.circular(16))),
+          decoration: const BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.all(Radius.circular(16))),
           child: Row(
             children: <Widget>[
               Container(
-                margin: const EdgeInsets.only(right: 8, left: 8, top: 8, bottom: 8),
+                margin:
+                    const EdgeInsets.only(right: 8, left: 8, top: 8, bottom: 8),
                 width: 80,
                 height: 80,
                 decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.all( Radius.circular(14)),
+                    borderRadius: const BorderRadius.all(Radius.circular(14)),
                     color: Colors.blue.shade200,
-                    image:  DecorationImage(image: NetworkImage(orderController.preorders[position].image),fit: BoxFit.fill)),
+                    image: DecorationImage(
+                        image: NetworkImage(
+                            orderController.preorders[position].image),
+                        fit: BoxFit.fill)),
               ),
               Expanded(
                 child: Container(
@@ -211,22 +256,25 @@ class _AddSalePageState extends State<AddSalePage> {
                     children: <Widget>[
                       Container(
                         padding: const EdgeInsets.only(right: 8, top: 4),
-                        child:  Text(
+                        child: Text(
                           orderController.preorders[position].name,
                           maxLines: 2,
                           softWrap: true,
-                          style:  const TextStyle(fontSize: 14),
+                          style: const TextStyle(fontSize: 14),
                         ),
                       ),
-                       Text(
+                      Text(
                         orderController.preorders[position].category,
-                        style: const TextStyle(color: Colors.grey, fontSize: 14),
+                        style:
+                            const TextStyle(color: Colors.grey, fontSize: 14),
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
-                           Text(
-                            "\$" " " + moneyFormat(orderController.preorders[position].price),
+                          Text(
+                            "\$" " " +
+                                moneyFormat(
+                                    orderController.preorders[position].price),
                             style: const TextStyle(color: Colors.cyan),
                           ),
                           Padding(
@@ -237,13 +285,15 @@ class _AddSalePageState extends State<AddSalePage> {
                               children: <Widget>[
                                 Container(
                                   color: Colors.grey.shade200,
-                                  padding: const EdgeInsets.only(bottom: 2, right: 12, left: 12),
-                                  child:  Text(
-                                    orderController.preorders[position].quantity,
-                                    style:  const TextStyle(fontWeight: FontWeight.w400),
+                                  padding: const EdgeInsets.only(
+                                      bottom: 2, right: 12, left: 12),
+                                  child: Text(
+                                    orderController
+                                        .preorders[position].quantity,
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.w400),
                                   ),
                                 ),
-
                               ],
                             ),
                           )
@@ -262,7 +312,8 @@ class _AddSalePageState extends State<AddSalePage> {
           child: GestureDetector(
             onTap: () {
               setState(() {
-                orderController.preorders.remove(orderController.preorders[position]);
+                orderController.preorders
+                    .remove(orderController.preorders[position]);
                 Navigator.pop(context);
               });
             },
@@ -276,7 +327,9 @@ class _AddSalePageState extends State<AddSalePage> {
                 color: Colors.white,
                 size: 20,
               ),
-              decoration: const BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(4)), color: Colors.cyan),
+              decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(4)),
+                  color: Colors.cyan),
             ),
           ),
         )
@@ -285,12 +338,12 @@ class _AddSalePageState extends State<AddSalePage> {
   }
 
   String moneyFormat(String price) {
-  if (price.length > 2) {
-    var value = price;
-    value = value.replaceAll(RegExp(r'\D'), '');
-    value = value.replaceAll(RegExp(r'\B(?=(\d{3})+(?!\d))'), ',');
-    return value;
+    if (price.length > 2) {
+      var value = price;
+      value = value.replaceAll(RegExp(r'\D'), '');
+      value = value.replaceAll(RegExp(r'\B(?=(\d{3})+(?!\d))'), ',');
+      return value;
+    }
+    return "";
   }
-  return "";
-}
 }
