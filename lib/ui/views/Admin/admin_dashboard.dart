@@ -73,7 +73,7 @@ class AdminDashBoard extends StatelessWidget {
     },
     {
       "name": "Registro Ventas",
-      "route": "/addproduct",
+      "route": "/dashboardsales",
       "url_image":
           "assets/images/ListadoVentasImage.png",
     },

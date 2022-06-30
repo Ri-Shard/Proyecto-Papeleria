@@ -1,11 +1,14 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:proyecto_papeleria/controller/order_controller.dart';
 import 'package:proyecto_papeleria/services/navigator_services.dart';
 import 'package:proyecto_papeleria/ui/views/Admin/admin_dashboard.dart';
 import 'package:proyecto_papeleria/ui/views/Admin/admin_homepage.dart';
 import 'package:proyecto_papeleria/ui/views/Admin/product/add_product.dart';
 import 'package:proyecto_papeleria/ui/views/Admin/product/list_product.dart';
+import 'package:proyecto_papeleria/ui/views/Admin/sales/dashboard_sale.dart';
+import 'package:proyecto_papeleria/ui/views/Admin/sales/list_sales.dart';
 import 'package:proyecto_papeleria/ui/views/Auth/login_page.dart';
 import 'package:proyecto_papeleria/ui/views/Admin/sales/add_sale.dart';
 
@@ -20,6 +23,7 @@ void main() async {
   Future<FirebaseApp> initialization = Firebase.initializeApp();
   await initialization.then((value){
     Get.put(ProductController());
+    Get.put(OrderController());
     Get.put(AuthController());
 
   });
@@ -47,8 +51,9 @@ class MyApp extends StatelessWidget {
                     '/addproduct': (context) =>  const AddProductsPage(),
                     '/productlist': (context) =>  const ProductListPage(),
                     //Order
-                      '/addsale': (context) =>   AddSalePage(),
-                    // '/productlist': (context) =>  const ProductListPage(),
+                      '/addsale': (context) =>  const AddSalePage(),
+                     '/dashboardsales': (context) =>  const DashboardSalePage(),
+                    '/orderlist': (context) =>  const OrderListPage(),
                   },
                   navigatorKey: navigationService.navigatorKey,
                   	  home: 

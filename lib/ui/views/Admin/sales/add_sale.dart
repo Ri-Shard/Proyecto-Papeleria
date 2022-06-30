@@ -150,7 +150,7 @@ class _AddSalePageState extends State<AddSalePage> {
             ],
           ),
           MaterialButton(
-            onPressed: () {
+            onPressed: () async{
               OrderModel order = OrderModel(
                   date: DateTime.now().toString(),
                   dateid: DateTime.now().millisecond.toString(),
@@ -167,24 +167,43 @@ class _AddSalePageState extends State<AddSalePage> {
                   if (auxcantidad == 0) {
                     productController.eliminarProducto(preorders);
                   } else {
-                    ProductoModel producto = ProductoModel(
+                     ProductoModel producto = ProductoModel(
                         name: preorders.name,
                         id: preorders.id,
                         category: preorders.category,
                         quantity: auxcantidad.toString(),
                         image: preorders.image,
                         price: preorders.price);
-                    productController.guardarProducto(producto);
+                     productController.guardarProducto(producto);
                   }
                 }
               }
-
               orderController.guardarOrden(order);
               orderController.preorders.clear();
-              setState(() {
-                productController.mostrarProducto();
+
+
+              setState(()  {
+                 productController.mostrarProducto();
               });
+
+               String auxganancias = await orderController.gananciasTotales();
+               String auxganancias7dias = await orderController.calcularGananciasLast7days();
+               await orderController.guardarGanancias(auxganancias,auxganancias7dias);
+               await Future.delayed(const Duration(seconds: 1));
               Navigator.pop(context);
+              
+                showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    backgroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    title: const Text("ENHORABUENA"),
+                    content: const Text("Venta Guardada"),
+                  );
+                });
             },
             color: Colors.cyan,
             padding:
